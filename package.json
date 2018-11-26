@@ -1,0 +1,29 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "CLI using Inquirer for selling products",
+  "main": "bamazon.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abigailjxn/bamazon.git"
+  },
+  "keywords": [
+    "command",
+    "line",
+    "node",
+    "mysql"
+  ],
+  "author": "Abigail Jackson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abigailjxn/bamazon/issues"
+  },
+  "homepage": "https://github.com/abigailjxn/bamazon#readme",
+  "dependencies": {
+    "inquirer": "^6.2.0",
+    "mysql": "^2.16.0"
+  }
+}
