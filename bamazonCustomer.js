@@ -10,39 +10,46 @@ let connection = mysql.createConnection({
   database: "bamazon"
 });
 
+function displayInventory() {
+  connection.query("SELECT * FROM products", function(error, result) {
+    if (error) {
+      throw error;
+    }
+    result.forEach(product => {
+      let productValues = [
+        [
+          product.item_id,
+          product.product_name,
+          product.department_name,
+          product.price,
+          product.stock_quantity
+        ]
+      ];
+      console.table(
+        ["ID", "Product Name", "Department", "Price", "Stock"],
+        productValues
+      );
+    });
+  });
+}
+
 connection.connect(err => {
   if (err) {
     throw err;
   }
-  console.log("connected!");
-  function displayInventory() {
-    connection.query("SELECT * FROM products", function (error, result){
-        if (error){
-            throw error;
-        }
-        result.forEach(product => {
-            let productValues = [
-                [product.item_id, product.product_name, product.department_name, product.price, product.stock_quantity],
-            ];
-            console.table(["ID", "Product Name", "Department", "Price", "Stock"], productValues);
-        });
-    })
-}
   displayInventory();
   connection.end;
 });
 
-
-
 // CLI begin
 // display inventory
-    // choose item by ID (?)
-    // choose number of items
-    // if sufficient number
-        // add to cart
-        // deplete from inventory, reflect in database
-        // show total cost of purchase
-        // display inventory remaining
-        // begin input again
+// choose item by ID (?)
+// choose number of items
+// if sufficient number
+// add to cart
+// deplete from inventory, reflect in database
+// show total cost of purchase
+// display inventory remaining
+// begin input again
 
-    // else error message of insufficient number, return to item list
+// else error message of insufficient number, return to item list
