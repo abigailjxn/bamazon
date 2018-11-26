@@ -57,9 +57,10 @@ function purchase() {
           message:
             "Welcome to Bamazon (aka the Moogle Shop)! What would you like to buy?",
           choices: results.map(product => {
-            return `Item ID: ${product.item_id}    ${
-              product.product_name
-            }     Price: ${product.price}     Stock: ${product.stock_quantity}`;
+            return product.product_name;
+            // return `Item ID: ${product.item_id}    ${
+            //   product.product_name
+            // }     Price: ${product.price}     Stock: ${product.stock_quantity}`;
           })
         },
 
@@ -81,37 +82,48 @@ function purchase() {
       ])
       .then(function(answer) {
         console.log(answer);
-        insufficientStock(answer);
+
+        compareStock(answer);
       });
   });
 }
 
 // if sufficient number
+
 // deplete from inventory, reflect in database
 // show total cost of purchase
 // display inventory remaining
 // begin input again
 
 // else error message of insufficient number, return to item list
-function insufficientStock(answer) {
-    let productStr = answer.productChoice;
-    // console.log(productStr);
-    productStr.split(":");
-    console.log(productStr[1]);
-    connection.query("SELECT products.stock_quantity FROM products", function(error, res) {
-        if (error) throw error;
-        // console.log(res);
-        let stockArr = res.map(product => {return product.stock_quantity});
-        // console.log(stockArr);
-        // if (
-        //     product.stock_quantity <= 0 ||
-        //     answer.stockChoice > product.stock_quantity
-        //   ) {
-        //     console.log(
-        //       "Ack, kupo! I don't have that many! Please choose something else."
-        //     );
-        //     purchase();
-        //   }
-    })
-  
+function compareStock(answer) {
+  connection.query("SELECT * FROM products", function(error, results) {
+    let chosenItem;
+    if (error) throw error;
+
+    for (let i = 0; i < results.length; i++) {
+      if (results[i].product_name === answer.productChoice) {
+        chosenItem = results[i];
+      }
+    }
+    let stock = chosenItem.stock_quantity;
+    console.log(chosenItem);
+    console.log(stock);
+
+    // if insufficient number in stock , error message and return to item list
+    if (stock <= 0 || answer.stockChoice > stock) {
+        console.log(`
+             ●
+         ʕo⌒ᴥ⌒ʔ✎
+        ===================
+            MOOGLE STORE
+
+
+        Ack, kupo! I don't have that many! Please choose something else.
+        
+        `
+        );
+        purchase();
+      }
+  });
 }
