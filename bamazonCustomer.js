@@ -1,5 +1,6 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
+const cTable = require("console.table");
 
 let connection = mysql.createConnection({
   host: "localhost",
@@ -20,7 +21,10 @@ connection.connect(err => {
             throw error;
         }
         result.forEach(product => {
-            console.log(product.product_name);
+            let productValues = [
+                [product.item_id, product.product_name, product.department_name, product.price, product.stock_quantity],
+            ];
+            console.table(["ID", "Product Name", "Department", "Price", "Stock"], productValues);
         });
     })
 }
@@ -28,16 +32,7 @@ connection.connect(err => {
   connection.end;
 });
 
-// function displayInventory() {
-//     connection.query("SELECT * FROM products", function (error, result){
-//         if (error){
-//             throw error;
-//             console.log(result);
-//         }
-//     })
-// }
 
-// displayInventory();
 
 // CLI begin
 // display inventory
