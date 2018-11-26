@@ -10,6 +10,7 @@ let connection = mysql.createConnection({
   database: "bamazon"
 });
 
+// display inventory
 function displayInventory() {
   connection.query("SELECT * FROM products", function(error, result) {
     if (error) {
@@ -49,6 +50,7 @@ function purchase() {
     if (error) throw error;
     inquirer
       .prompt([
+        // choose item by ID (?)
         {
           name: "productChoice",
           type: "list",
@@ -60,6 +62,8 @@ function purchase() {
             }     Price: ${product.price}     Stock: ${product.stock_quantity}`;
           })
         },
+
+        // choose number of items to purchase
         {
           name: "stockChoice",
           type: "input",
@@ -77,17 +81,37 @@ function purchase() {
       ])
       .then(function(answer) {
         console.log(answer);
+        insufficientStock(answer);
       });
   });
 }
-// display inventory
-// choose item by ID (?)
-// choose number of items
+
 // if sufficient number
-// add to cart
 // deplete from inventory, reflect in database
 // show total cost of purchase
 // display inventory remaining
 // begin input again
 
 // else error message of insufficient number, return to item list
+function insufficientStock(answer) {
+    let productStr = answer.productChoice;
+    // console.log(productStr);
+    productStr.split(":");
+    console.log(productStr[1]);
+    connection.query("SELECT products.stock_quantity FROM products", function(error, res) {
+        if (error) throw error;
+        // console.log(res);
+        let stockArr = res.map(product => {return product.stock_quantity});
+        // console.log(stockArr);
+        // if (
+        //     product.stock_quantity <= 0 ||
+        //     answer.stockChoice > product.stock_quantity
+        //   ) {
+        //     console.log(
+        //       "Ack, kupo! I don't have that many! Please choose something else."
+        //     );
+        //     purchase();
+        //   }
+    })
+  
+}
