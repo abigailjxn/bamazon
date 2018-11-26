@@ -46,6 +46,7 @@ connection.connect(err => {
 
 // CLI begin
 function purchase() {
+    displayInventory();
   connection.query("SELECT * FROM products", function(error, results) {
     if (error) throw error;
     inquirer
@@ -88,8 +89,6 @@ function purchase() {
   });
 }
 
-// if sufficient number
-
 // deplete from inventory, reflect in database
 // show total cost of purchase
 // display inventory remaining
@@ -106,24 +105,60 @@ function compareStock(answer) {
         chosenItem = results[i];
       }
     }
-    let stock = chosenItem.stock_quantity;
+    let databaseStock = chosenItem.stock_quantity;
     console.log(chosenItem);
-    console.log(stock);
+    console.log(databaseStock);
 
     // if insufficient number in stock , error message and return to item list
-    if (stock <= 0 || answer.stockChoice > stock) {
-        console.log(`
+    if (databaseStock <= 0 || answer.stockChoice > databaseStock) {
+      console.log(`
              ●
-         ʕo⌒ᴥ⌒ʔ✎
+         ʕo⌒ᴥ⌒ʔ ✎
         ===================
             MOOGLE STORE
 
 
         Ack, kupo! I don't have that many! Please choose something else.
         
-        `
-        );
-        purchase();
-      }
+        `);
+      purchase();
+    }
+
+    //   if sufficient number
+    else {
+      let newDatabaseStock = databaseStock - answer.stockChoice;
+      let totalCost = answer.stockChoice * chosenItem.price;
+      connection.query(
+        "UPDATE products SET ? WHERE ?",
+        [
+          {
+            stock_quantity: newDatabaseStock
+          },
+          {
+              item_id: chosenItem.item_id
+          }
+        ],
+        function(error) {
+          if (error) throw error;
+          console.log(`
+                        ●
+                    ʕo⌒ᴥ⌒ʔ ✎
+                    ===================
+                        MOOGLE STORE
+       
+       
+                    Thank you for your purchase, kupo!
+               
+                    Your total is: ${totalCost}
+               `);
+               console.log(`
+                    Store Stock Remaining: ${newDatabaseStock}
+
+                    
+                `)
+          purchase();
+        }
+      );
+    }
   });
 }
