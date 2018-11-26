@@ -33,15 +33,37 @@ function displayInventory() {
   });
 }
 
+// Connect to database
 connection.connect(err => {
   if (err) {
     throw err;
   }
-  displayInventory();
+//   displayInventory();
+  purchase();
   connection.end;
 });
 
 // CLI begin
+function purchase () {
+    connection.query("SELECT * FROM products", function (error, results) {
+        if (error) throw error;
+        inquirer
+        .prompt([
+            {
+                name: "choice",
+                type: "list",
+                message: "Welcome to Bamazon (aka the Moogle Shop)! What would you like to buy?",
+                choices: 
+                results.map(product => {
+                    return (`Item ID: ${product.item_id}    ${product.product_name}     Price: ${product.price}     Stock: ${product.stock_quantity}`) })
+
+            }
+        ])
+        .then (function (answer) {
+            console.log(answer);
+        })
+    })
+}
 // display inventory
 // choose item by ID (?)
 // choose number of items
