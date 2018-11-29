@@ -39,7 +39,6 @@ connection.connect(err => {
   if (err) {
     throw err;
   }
-  //   displayInventory();
   purchase();
   connection.end;
 });
@@ -51,7 +50,7 @@ function purchase() {
     if (error) throw error;
     inquirer
       .prompt([
-        // choose item by ID (?)
+        // choose item to purchase
         {
           name: "productChoice",
           type: "list",
@@ -59,9 +58,6 @@ function purchase() {
             "Welcome to Bamazon (aka the Moogle Shop)! What would you like to buy?",
           choices: results.map(product => {
             return product.product_name;
-            // return `Item ID: ${product.item_id}    ${
-            //   product.product_name
-            // }     Price: ${product.price}     Stock: ${product.stock_quantity}`;
           })
         },
 
@@ -89,12 +85,6 @@ function purchase() {
   });
 }
 
-// deplete from inventory, reflect in database
-// show total cost of purchase
-// display inventory remaining
-// begin input again
-
-// else error message of insufficient number, return to item list
 function compareStock(answer) {
   connection.query("SELECT * FROM products", function(error, results) {
     let chosenItem;
@@ -121,13 +111,15 @@ function compareStock(answer) {
         Ack, kupo! I don't have that many! Please choose something else.
         
         `);
-      purchase();
+    // begin input again
+    purchase();
     }
 
     //   if sufficient number
     else {
       let newDatabaseStock = databaseStock - answer.stockChoice;
       let totalCost = answer.stockChoice * chosenItem.price;
+      // deplete from inventory, reflect in database
       connection.query(
         "UPDATE products SET ? WHERE ?",
         [
@@ -138,6 +130,7 @@ function compareStock(answer) {
               item_id: chosenItem.item_id
           }
         ],
+        // show total cost of purchase
         function(error) {
           if (error) throw error;
           console.log(`
@@ -154,9 +147,10 @@ function compareStock(answer) {
                console.log(`
                     Store Stock Remaining: ${newDatabaseStock}
 
-                    
+
                 `)
-          purchase();
+        // begin input again
+        purchase();
         }
       );
     }
