@@ -15,7 +15,10 @@ This app utilizes Node and a MySQL database to track sales and inventory.
 - MySQL
 
 ## Demo
-View a demonstration of the app here: 
+View a demonstration of the app here: https://youtu.be/zqJGjW5MwH8
 
 ## Issues
 1. I wasn't sure how to format the console table without including the headers each time. 
+
+## Extras
+This is a Moogle in case you were curious :) https://www.giantbomb.com/moogles/3015-497/

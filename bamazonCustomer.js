@@ -78,7 +78,7 @@ function purchase() {
         }
       ])
       .then(function(answer) {
-        console.log(answer);
+        // console.log(answer);
 
         compareStock(answer);
       });
@@ -96,8 +96,8 @@ function compareStock(answer) {
       }
     }
     let databaseStock = chosenItem.stock_quantity;
-    console.log(chosenItem);
-    console.log(databaseStock);
+    // console.log(chosenItem);
+    // console.log(databaseStock);
 
     // if insufficient number in stock , error message and return to item list
     if (databaseStock <= 0 || answer.stockChoice > databaseStock) {
